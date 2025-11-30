@@ -2,7 +2,7 @@ const API_BASE = 'http://localhost:6400/api';
 
 // Piece Unicode symbols
 const PIECES = {
-    'P': '♟', 'N': '♞', 'B': '♝', 'R': '♜', 'Q': '♛', 'K': '♚',
+    'P': '♙', 'N': '♘', 'B': '♗', 'R': '♖', 'Q': '♕', 'K': '♔',
     'p': '♟', 'n': '♞', 'b': '♝', 'r': '♜', 'q': '♛', 'k': '♚'
 };
 
@@ -486,26 +486,21 @@ function handleDrop(e) {
     e.preventDefault();
     const dropSquare = e.currentTarget;
     const draggedTo = dropSquare.dataset.square;
-    
-if (draggedFrom && draggedTo && draggedFrom !== draggedTo) {
-    const fromPiece = draggedPiece.textContent;
-    const moveBase = draggedFrom + draggedTo;
-    
-    let move = moveBase;
 
-    // Pawn promotion detection
-    if ((fromPiece === '♟' && draggedTo[1] === '1') || // white pawn reaches 8th rank
-        (fromPiece === '♟' && draggedTo[1] === '8')) { // black pawn reaches 1st rank
-        // Default promote to Queen
-        move += 'q'; // e.g., "e7e8q"
-        // Optionally, you can prompt user:
-        // const promo = prompt("Promote to (q/r/b/n)?", "q");
-        // move += promo || 'q';
+    if (draggedFrom && draggedTo && draggedFrom !== draggedTo) {
+        const fromPiece = draggedPiece.textContent;
+        const moveBase = draggedFrom + draggedTo;
+
+        // Check if pawn promotion
+        if ((fromPiece === '♙' && draggedTo[1] === '8') || (fromPiece === '♟' && draggedTo[1] === '1')) {
+            // Show promotion UI
+            pendingPromotionMove = moveBase;
+            promotionModal.style.display = 'block';
+        } else {
+            playMove(moveBase);
+        }
     }
 
-    playMove(move);
-}
-    
     dropSquare.classList.remove('drag-over');
 }
 
@@ -564,3 +559,63 @@ function showAnalysisOnSquare(move, data) {
         }, 300);
     }, 3000);
 }
+
+/* ==================== PROMOTION UI ==================== */
+
+// Create promotion modal container
+const promotionModal = document.createElement('div');
+promotionModal.id = 'promotionModal';
+promotionModal.style.position = 'fixed';
+promotionModal.style.top = '50%';
+promotionModal.style.left = '50%';
+promotionModal.style.transform = 'translate(-50%, -50%)';
+promotionModal.style.backgroundColor = '#000064';
+promotionModal.style.border = '2px solid #ffffff';
+promotionModal.style.borderRadius = '10px';
+promotionModal.style.padding = '20px';
+promotionModal.style.display = 'none';
+promotionModal.style.zIndex = '1000';
+promotionModal.style.boxShadow = '0 0 20px #ffffff';
+promotionModal.style.textAlign = 'center';
+promotionModal.style.color = '#fff';
+document.body.appendChild(promotionModal);
+
+// Add title
+const promotionTitle = document.createElement('div');
+promotionTitle.textContent = 'Choose Promotion';
+promotionTitle.style.fontSize = '18px';
+promotionTitle.style.marginBottom = '10px';
+promotionModal.appendChild(promotionTitle);
+
+// Container for piece options
+const promotionOptions = document.createElement('div');
+promotionOptions.style.display = 'flex';
+promotionOptions.style.justifyContent = 'space-around';
+promotionOptions.style.gap = '15px';
+promotionModal.appendChild(promotionOptions);
+
+// Piece options
+const promotionPieces = ['q', 'r', 'b', 'n'];
+promotionPieces.forEach(p => {
+    const pieceBtn = document.createElement('div');
+    pieceBtn.textContent = PIECES[p.toUpperCase()];
+    pieceBtn.style.fontSize = '32px';
+    pieceBtn.style.cursor = 'pointer';
+    pieceBtn.style.padding = '10px';
+    pieceBtn.style.border = '2px solid #ffffff';
+    pieceBtn.style.borderRadius = '6px';
+    pieceBtn.style.backgroundColor = '#000064';
+    pieceBtn.addEventListener('mouseenter', () => pieceBtn.style.backgroundColor = '#ffffff');
+    pieceBtn.addEventListener('mouseleave', () => pieceBtn.style.backgroundColor = '#000064');
+    pieceBtn.addEventListener('click', () => {
+        promotionModal.style.display = 'none';
+        if (pendingPromotionMove) {
+            playMove(pendingPromotionMove + p);
+            pendingPromotionMove = null;
+        }
+    });
+    promotionOptions.appendChild(pieceBtn);
+});
+
+// Global variable to hold pending promotion move
+let pendingPromotionMove = null;
