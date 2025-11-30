@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chess Analysis Engine</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>♟️ Chess Analysis Engine</h1>
+            <div class="status-indicator">
+                <span id="status">Connecting...</span>
+                <span id="engine-status" class="status-dot"></span>
+            </div>
+        </header>
+
+        <main>
+            <div class="board-section">
+                <!-- Chessboard -->
+                <div class="board-container">
+                    <div id="chessboard" class="chessboard"></div>
+                    <div class="board-labels">
+                        <div class="files">
+                            <span>a</span><span>b</span><span>c</span><span>d</span>
+                            <span>e</span><span>f</span><span>g</span><span>h</span>
+                        </div>
+                        <div class="ranks">
+                            <span>8</span><span>7</span><span>6</span><span>5</span>
+                            <span>4</span><span>3</span><span>2</span><span>1</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Move Controls -->
+                <div class="controls">
+                    <div class="nav-group">
+                        <button id="backButton" class="nav-btn">← Back</button>
+                        <button id="forwardButton" class="nav-btn">Forward →</button>
+                    </div>
+                    <div class="button-group">
+                        <button id="suggestButton" class="secondary">Suggest Best</button>
+                        <button id="resetButton" class="secondary">Reset Board</button>
+                        <button id="undoButton" class="secondary">Undo</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Analysis Panel -->
+            <div class="analysis-panel">
+                <div class="panel-header">
+                    <h2>📊 Analysis</h2>
+                </div>
+
+                <!-- Position Info -->
+                <div class="info-section">
+                    <div class="info-row">
+                        <span class="label">Move Count:</span>
+                        <span id="moveCount" class="value">0</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">White Moves:</span>
+                        <span id="whiteMoves" class="value">0</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">Black Moves:</span>
+                        <span id="blackMoves" class="value">0</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">Material:</span>
+                        <span id="material" class="value">0</span>
+                    </div>
+                </div>
+
+                <!-- Move Grades Distribution -->
+                 </div>
+               <!-- Player Grade Summary -->
+                <div class="player-grade-summary">
+                  <h3>Player Grade Summary</h3>
+                  <table>
+                    <tr><th>Grade</th><th>White</th><th>Black</th></tr>
+                    <tr><td class="grade-count-sigma">Sigma</td><td id="white-Sigma" class="grade-count-sigma">0</td><td id="black-Sigma" class="grade-count-sigma">0</td></tr>
+                    <tr><td class="grade-count-chad">Chad</td><td id="white-Chad" class="grade-count-chad">0</td><td id="black-Chad" class="grade-count-chad">0</td></tr>
+                    <tr><td class="grade-count-good">Good</td><td id="white-Good" class="grade-count-good">0</td><td id="black-Good" class="grade-count-good">0</td></tr>
+                    <tr><td class="grade-count-okay">Okay</td><td id="white-Okay" class="grade-count-okay">0</td><td id="black-Okay" class="grade-count-okay">0</td></tr>
+                    <tr><td class="grade-count-strange">Strange</td><td id="white-Strange" class="grade-count-strange">0</td><td id="black-Strange" class="grade-count-strange">0</td></tr>
+                    <tr><td class="grade-count-bad">Bad</td><td id="white-Bad" class="grade-count-bad">0</td><td id="black-Bad" class="grade-count-bad">0</td></tr>
+                    <tr><td class="grade-count-clown">Clown</td><td id="white-Clown" class="grade-count-clown">0</td><td id="black-Clown" class="grade-count-clown">0</td></tr>
+                  </table>
+                </div>
+
+                <!-- Evaluation Display -->
+                <div class="eval-section">
+                    <div class="eval-label">Evaluation</div>
+                    <div class="eval-bar-container">
+                        <div class="eval-bar">
+                            <div id="evalBarFill" class="eval-fill" style="width: 50%"></div>
+                        </div>
+                    </div>
+                    <div id="evalText" class="eval-text">0.00</div>
+                </div>
+
+                <!-- Last Move Analysis -->
+                <div class="move-analysis" id="moveAnalysis" style="display: none;">
+                    <h3>📈 Last Move</h3>
+                    <div class="info-row">
+                        <span class="label">Move:</span>
+                        <span id="lastMove" class="value">-</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">Grade:</span>
+                        <span id="moveGrade" class="value grade-none">-</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">Eval Change:</span>
+                        <span id="evalChange" class="value">-</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">Material Change:</span>
+                        <span id="materialChange" class="value">-</span>
+                    </div>
+                    <div class="info-row" id="hangingRow" style="display: none;">
+                        <span class="label">⚠️ Hanging:</span>
+                        <span id="hanging" class="value">-</span>
+                    </div>
+                </div>
+
+                <!-- Best Line -->
+                <div class="best-line-section" id="bestLineSection" style="display: none;">
+                    <h3>💡 Best Line</h3>
+                    <div id="bestLine" class="best-line"></div>
+                </div>
+
+                <!-- Move History -->
+                <div class="history-section">
+                    <h3>📝 Move History</h3>
+                    <div id="moveHistory" class="move-list"></div>
+                </div>
+            </div>
+        </main>
+
+        <!-- FEN Display and Copy -->
+        <div class="footer">
+            <div class="fen-display">
+                <span>FEN:</span>
+                <code id="fenDisplay">rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1</code>
+                <button id="copyFenButton" class="copy-btn">Copy</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
