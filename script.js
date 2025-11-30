@@ -487,11 +487,24 @@ function handleDrop(e) {
     const dropSquare = e.currentTarget;
     const draggedTo = dropSquare.dataset.square;
     
-    if (draggedFrom && draggedTo && draggedFrom !== draggedTo) {
-        // Construct UCI notation (e.g., e2e4)
-        const move = draggedFrom + draggedTo;
-        playMove(move);
+if (draggedFrom && draggedTo && draggedFrom !== draggedTo) {
+    const fromPiece = draggedPiece.textContent;
+    const moveBase = draggedFrom + draggedTo;
+    
+    let move = moveBase;
+
+    // Pawn promotion detection
+    if ((fromPiece === '♟' && draggedTo[1] === '1') || // white pawn reaches 8th rank
+        (fromPiece === '♟' && draggedTo[1] === '8')) { // black pawn reaches 1st rank
+        // Default promote to Queen
+        move += 'q'; // e.g., "e7e8q"
+        // Optionally, you can prompt user:
+        // const promo = prompt("Promote to (q/r/b/n)?", "q");
+        // move += promo || 'q';
     }
+
+    playMove(move);
+}
     
     dropSquare.classList.remove('drag-over');
 }
