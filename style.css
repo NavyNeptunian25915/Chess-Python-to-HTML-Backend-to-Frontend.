@@ -419,8 +419,8 @@ button.secondary {
 }
 
 button.secondary:hover {
-    background: #001040;
-    box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+    background: #000064;
+    box-shadow: 0 0 10px #ffffff;
 }
 
 #playButton {
@@ -430,11 +430,11 @@ button.secondary:hover {
 
 /* Analysis Panel */
 .analysis-panel {
-    background: #001040;
+    background: #000064;
     border-radius: 12px;
     padding: 25px;
     border: 2px solid #ffffff;
-    box-shadow: 0 0 20px rgba(0, 255, 255, 0.1);
+    box-shadow: 0 0 20px #ffffff;
     overflow-y: auto;
     display: flex;
     flex-direction: column;
@@ -463,7 +463,7 @@ button.secondary:hover {
     justify-content: space-between;
     align-items: center;
     padding: 8px 0;
-    border-bottom: 1px solid #003080;
+    border-bottom: 1px solid #ffffff;
     color: #ffffff;
 }
 
@@ -521,7 +521,7 @@ button.secondary:hover {
     align-items: center;
     justify-content: center;
     padding: 10px;
-    background: #001040;
+    background: #000064;
     border: 2px solid #ffffff;
     border-radius: 6px;
     text-align: center;
@@ -598,7 +598,7 @@ button.secondary:hover {
 }
 
 #hangingRow {
-    background: #1a1a00;
+    background: #000064;
     padding: 8px;
     border-radius: 4px;
     margin-top: 8px;
@@ -628,14 +628,14 @@ button.secondary:hover {
 }
 
 .best-line {
-    background: #001040;
+    background: #000064;
     padding: 10px;
     border-radius: 4px;
     font-family: 'Orbitron', monospace;
     font-weight: 600;
     color: #00ff00;
     word-break: break-all;
-    border: 1px solid #003080;
+    border: 1px solid #ffffff;
 }
 
 /* Move History */
