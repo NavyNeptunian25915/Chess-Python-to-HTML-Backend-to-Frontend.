@@ -152,10 +152,10 @@ def grade_move(board, move, eval_before, eval_after):
     
     # Start with eval-based grading
     # Sigma sacrifice: Material lost but Stockfish approves
-    if material_change >= 0 and hanging_piece_value > 1 and eval_change >= -20:
+    if material_change < hanging_piece_value and eval_change >= -20:
         grade = "Sigma"
     # Chad capture bonus: Material gained with good eval
-    elif material_change > 0 and hanging_piece_value <= 1 and eval_change >= -40:
+    elif material_change >= hanging_piece_value <= 1 and eval_change >= -40:
         grade = "Chad"
     elif eval_change >= -60:
         grade = "Good"
